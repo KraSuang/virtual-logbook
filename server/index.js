@@ -22,12 +22,14 @@ app.use(cookieParser());
 api.use('/register',registerRouter);
 api.use('/login', loginRouter);
 
-api.get('/protected', authMiddleware, (req, res) => {
+api.get('/access/protection', authMiddleware, (req, res) => {
     const userId = req.user.uid;
-    res.json({ message: 'Protected API endpoint', userId });
+    console.log({ UID: userId})
+    res.json({ message: 'Protected API endpoint', status: 200, userId });
 });
 
 app.use(cors());
+api.use(cors())
 
 app.use(vhost('api.*', api))
 
