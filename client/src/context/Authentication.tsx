@@ -1,8 +1,11 @@
 import { VerticalTextField } from "../components/Textfield.tsx"
+import { useNavigate } from "react-router-dom"
 import { Button } from "../components/Button.tsx";
 import { useState } from "react";
+import axios from 'axios'
 
 export function Login() {
+    const navigate = useNavigate()
     const errorCode = [
         { id: 0, title: "" },
         { id: 1, title: "Please enter email address and password." },
@@ -24,7 +27,7 @@ export function Login() {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         setIsError(false);
         setIsErrorType(0)
 
@@ -45,17 +48,46 @@ export function Login() {
                 setIsError(false);
                 setIsErrorType(0);
             }
-            console.log('Logging in with:', credentials);
+
+            try {
+                const apiUrl = 'http://api.localhost:10154/login';
+                const encodedUrl = encodeURI(apiUrl);
+                const response = await axios.post(encodedUrl, credentials, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.data) {
+                    // Handle authentication error
+                    setIsError(true);
+                    setIsErrorType(1);
+                    return;
+                }
+
+                const { accessToken } = response.data;
+
+                localStorage.setItem('accessToken', accessToken);
+
+                const hasAccessToken = !!localStorage.getItem('accessToken');
+
+                if(hasAccessToken) {
+                    navigate('/')
+                }
+
+            } catch (error) {
+                console.error('Error during login:', error);
+            }
         }
     };
 
     return (
-        <form 
+        <form
             className="flex w-full h-full justify-center items-center pb-10"
             onSubmit={(e) => {
                 e.preventDefault(); // Prevent the default form submission
                 handleLogin(); // Call your login logic after validation
-        }}>
+            }}>
             <div className="block px-6 py-6 w-full max-w-[460px] h-fit bg-background-content shadow-md rounded-2xl">
                 <p className="text-[32px] mb-4 px-1.5">Login</p>
                 <VerticalTextField
