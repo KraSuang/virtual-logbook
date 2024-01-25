@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar.tsx"
 import { Modal_Setting } from "../components/Modal.tsx"
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
 import { useState, useEffect } from "react"
+import axios from 'axios'
 import { Login, Register } from "./Authentication.tsx"
 import Overview from "./Overview.tsx"
 
@@ -19,22 +20,30 @@ export default function Main() {
     }
 
     useEffect(() => {
-        const hasAccessToken = !!localStorage.getItem('accessToken'); // Change this based on how you store the access token
-        const isLoginPage = location.pathname === '/login';
-        const isRegisterPage = location.pathname === '/register';
+        const AccessTokenData = async () => {
+            const AccessToken = localStorage.getItem('accessToken');
 
-        if (!hasAccessToken) {
-            if (isLoginPage) {
-                navigate('/login');
-            } else if (isRegisterPage) {
-                // Redirect to signup page
-                navigate('/register');
-            } else {
-                // Redirect to login page for other unauthorized paths
-                navigate('/login');
+            try {
+                const response = await axios.get('http://api.localhost:10154/access/protection', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${AccessToken}`
+                    },
+                });
+
+                const accessResult = response.data
+                if(accessResult.status === 401 && accessResult === 403) {
+                    navigate('/login')
+                }
+            } catch (error) {
+                navigate('/login')
             }
-        }
+        };
+
+        AccessTokenData(); // Call the function directly
+
     }, [navigate, location.pathname]);
+
 
     return (
         <>
