@@ -5,8 +5,8 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FC } from 'react';
 
 interface HorizontalDataProps {
-    index: number;
     flight: string;
+    flight_number: number;
     dep_icao: string;
     // dep_iata: string;
     arr_icao: string;
@@ -18,9 +18,9 @@ interface HorizontalDataProps {
     date_add: string;
 }
 
-export const HorizonDataGrid: FC<HorizontalDataProps> = ({ index, flight, dep_icao, arr_icao, aircraft_icao, airframe, departure_time, time_enroute, date_add, ...rest }) => {
+export const HorizonDataGrid: FC<HorizontalDataProps> = ({ flight, flight_number, dep_icao, arr_icao, aircraft_icao, airframe, departure_time, time_enroute, date_add, ...rest }) => {
     return (
-        <div key={index} className='flex w-full shadow-md h-fit bg-background-content rounded-lg border-2 border-gray-800/20 px-3 py-2 justify-center items-center my-3'>
+        <div className='flex w-full shadow-md h-fit bg-background-content rounded-lg border-2 border-gray-800/20 px-3 py-2 justify-center items-center my-3'>
             <p className='w-full text-center
                 sm:text-sm 
                 md:text-base
