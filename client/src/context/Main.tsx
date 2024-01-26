@@ -1,14 +1,11 @@
 import Navbar from "../components/Navbar.tsx"
 import { Modal_Setting } from "../components/Modal.tsx"
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom"
-import { useState, useEffect } from "react"
-import axios from 'axios'
+import { Routes, Route } from "react-router-dom"
+import { useState } from "react"
 import { Login, Register } from "./Authentication.tsx"
 import Overview from "./Overview.tsx"
 
 export default function Main() {
-    const navigate = useNavigate();
-    const location = useLocation()
     const [isSettingOpen, setIsSettingOpen] = useState(false);
 
     const openSettingModal = () => {
@@ -18,32 +15,6 @@ export default function Main() {
     const closeSettingModal = () => {
         setIsSettingOpen(false)
     }
-
-    useEffect(() => {
-        const AccessTokenData = async () => {
-            const AccessToken = localStorage.getItem('accessToken');
-
-            try {
-                const response = await axios.get('http://api.localhost:10154/access/protection', {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${AccessToken}`
-                    },
-                });
-
-                const accessResult = response.data
-                if(accessResult.status === 401 && accessResult === 403) {
-                    navigate('/login')
-                }
-            } catch (error) {
-                navigate('/login')
-            }
-        };
-
-        AccessTokenData(); // Call the function directly
-
-    }, [navigate, location.pathname]);
-
 
     return (
         <>

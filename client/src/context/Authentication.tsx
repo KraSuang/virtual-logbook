@@ -50,7 +50,7 @@ export function Login() {
             }
 
             try {
-                const apiUrl = 'http://api.localhost:10154/login';
+                const apiUrl = 'http://api.localhost:10154/v1/login';
                 const encodedUrl = encodeURI(apiUrl);
                 const response = await axios.post(encodedUrl, credentials, {
                     headers: {
@@ -109,7 +109,7 @@ export function Login() {
                         {errorCode.map((err) => {
                             if (err.id === isErrorType) {
                                 return (
-                                    <p className="text-white">{err.title}</p>
+                                    <p key={err.id} className="text-white">{err.title}</p>
                                 )
                             }
                         })}

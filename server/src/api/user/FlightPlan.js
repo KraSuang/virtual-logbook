@@ -118,6 +118,7 @@ const AddFlightPlanFromSimbrief = async (req, res) => {
                     altitude_unit: fpd.atc.initial_alt_unit,
                     remark: fpd.atc.section18,
                     times: {
+                        block_time_second: blkTime,
                         dep_time: DEP_Time,
                         arr_time: Arr_Time,
                         est_time: EST_Time,
@@ -261,9 +262,34 @@ const GetFlightPlan = async (req, res) => {
         const db = client.db(dbName);
         const collection = db.collection('flightPlans');
 
-        const fpd = collection.find({ 'ident.uid': userId });
-        const flightPlanDataArray = await fpd.toArray()
-        res.json(flightPlanDataArray)
+        // Find documents for the given user
+        const fpdCursor = collection.find({ 'ident.uid': userId });
+
+        // Convert the cursor to an array
+        const flightPlanDataArray = await fpdCursor.toArray();
+
+        // Calculate the sum of block_time_second values
+        const totalBlockTimeSeconds = flightPlanDataArray.reduce((sum, doc) => sum + doc.flightPlan.general.times.block_time_second, 0);
+
+        // Convert total seconds to hours and minutes
+        const hours = Math.floor(totalBlockTimeSeconds / 3600);
+        const minutes = Math.floor((totalBlockTimeSeconds % 3600) / 60);
+
+        // Format the result as "HH:mm"
+        const formattedTotalBlockTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+        // Add the totalBlockTime to the response
+        const responseWithTotalBlockTime = {
+            flightPlanDataArray,
+            flightTime: {
+                total: flightPlanDataArray.length,
+                format: formattedTotalBlockTime,
+                hour: hours,
+                minute: minutes
+            }
+        };
+
+        res.json(responseWithTotalBlockTime);
     } catch (error) {
         console.error(error)
     }
