@@ -1,34 +1,87 @@
 import { MdOutlineAirplanemodeActive } from 'react-icons/md'
 import { HorizonDataGrid } from '../components/DataGrid.tsx'
 import { Button } from '../components/Button.tsx';
-
-const flightData = [
-    { flight: "LH123", dep_icao: "EDDF", arr_icao: "LSZH", aircraft_icao: "A320", airframe: "D-AIPX", departure_time: "05:17 UTC", time_enroute: "0:52", date_add: "2024-01-24", },
-    { flight: "BA456", dep_icao: "EGLL", arr_icao: "LFPG", aircraft_icao: "B77W", airframe: "G-VIIO", departure_time: "05:17 UTC", time_enroute: "2:40", date_add: "2024-01-24", },
-    { flight: "DL789", dep_icao: "KATL", arr_icao: "KJFK", aircraft_icao: "B738", airframe: "N123DL", departure_time: "05:17 UTC", time_enroute: "2:10", date_add: "2024-01-24", },
-    { flight: "EK432", dep_icao: "OMDB", arr_icao: "YSSY", aircraft_icao: "A380", airframe: "A6-EDM", departure_time: "05:17 UTC", time_enroute: "14:30", date_add: "2024-01-24", },
-    { flight: "SQ345", dep_icao: "WSSS", arr_icao: "KSFO", aircraft_icao: "B789", airframe: "9V-SCB", departure_time: "05:17 UTC", time_enroute: "16:45", date_add: "2024-01-25", },
-    { flight: "LH123", dep_icao: "EDDF", arr_icao: "LSZH", aircraft_icao: "A320", airframe: "D-AIPX", departure_time: "05:17 UTC", time_enroute: "1:30", date_add: "2024-01-24", },
-    { flight: "BA456", dep_icao: "EGLL", arr_icao: "LFPG", aircraft_icao: "B77W", airframe: "G-VIIO", departure_time: "05:17 UTC", time_enroute: "1:45", date_add: "2024-01-24", },
-    { flight: "DL789", dep_icao: "KATL", arr_icao: "KJFK", aircraft_icao: "B738", airframe: "N123DL", departure_time: "05:17 UTC", time_enroute: "2:15", date_add: "2024-01-24", },
-    { flight: "EK432", dep_icao: "OMDB", arr_icao: "YSSY", aircraft_icao: "A380", airframe: "A6-EDM", departure_time: "05:17 UTC", time_enroute: "14:30", date_add: "2024-01-24", },
-    { flight: "SQ345", dep_icao: "WSSS", arr_icao: "KSFO", aircraft_icao: "B789", airframe: "9V-SCB", departure_time: "05:17 UTC", time_enroute: "16:45", date_add: "2024-01-25", },
-    { flight: "LH123", dep_icao: "EDDF", arr_icao: "LSZH", aircraft_icao: "A320", airframe: "D-AIPX", departure_time: "05:17 UTC", time_enroute: "0:52", date_add: "2024-01-24", },
-    { flight: "BA456", dep_icao: "EGLL", arr_icao: "LFPG", aircraft_icao: "B77W", airframe: "G-VIIO", departure_time: "05:17 UTC", time_enroute: "2:40", date_add: "2024-01-24", },
-    { flight: "DL789", dep_icao: "KATL", arr_icao: "KJFK", aircraft_icao: "B738", airframe: "N123DL", departure_time: "05:17 UTC", time_enroute: "2:10", date_add: "2024-01-24", },
-    { flight: "EK432", dep_icao: "OMDB", arr_icao: "YSSY", aircraft_icao: "A380", airframe: "A6-EDM", departure_time: "05:17 UTC", time_enroute: "14:30", date_add: "2024-01-24", },
-    { flight: "SQ345", dep_icao: "WSSS", arr_icao: "KSFO", aircraft_icao: "B789", airframe: "9V-SCB", departure_time: "05:17 UTC", time_enroute: "16:45", date_add: "2024-01-25", },
-    { flight: "LH123", dep_icao: "EDDF", arr_icao: "LSZH", aircraft_icao: "A320", airframe: "D-AIPX", departure_time: "05:17 UTC", time_enroute: "1:30", date_add: "2024-01-24", },
-    { flight: "BA456", dep_icao: "EGLL", arr_icao: "LFPG", aircraft_icao: "B77W", airframe: "G-VIIO", departure_time: "05:17 UTC", time_enroute: "1:45", date_add: "2024-01-24", },
-    { flight: "DL789", dep_icao: "KATL", arr_icao: "KJFK", aircraft_icao: "B738", airframe: "N123DL", departure_time: "05:17 UTC", time_enroute: "2:15", date_add: "2024-01-24", },
-    { flight: "EK432", dep_icao: "OMDB", arr_icao: "YSSY", aircraft_icao: "A380", airframe: "A6-EDM", departure_time: "05:17 UTC", time_enroute: "14:30", date_add: "2024-01-24", },
-    { flight: "SQ345", dep_icao: "WSSS", arr_icao: "KSFO", aircraft_icao: "B789", airframe: "9V-SCB", departure_time: "05:17 UTC", time_enroute: "16:45", date_add: "2024-01-25", }
-];
+import { useUserDataApi } from '../api/UserData.ts';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { useFlightPlanDataAPI } from '../api/FlightPlan.ts'
 
 export default function Overview() {
+    const navigate = useNavigate()
+    const { userData, loading } = useUserDataApi()
+    const { flightPlanData } = useFlightPlanDataAPI()
+
+    useEffect(() => {
+        // Now you can use the 'userData' and 'loading' states in your component.
+        console.log('User Data:', userData);
+        console.log('Loading:', loading);
+    }, [userData, loading]);
+
+    const handleAddFlightPlanClick = async () => {
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+
+            const response = await axios.post('http://api.localhost:10154/v1/flightplan/add', {
+                uid: userData?.uid,
+                simbrief: userData?.link.simbrief
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.data) {
+                throw new Error('Failed to fetch data');
+            }
+            else {
+                console.log(response.data)
+                navigate('/')
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="block w-full h-full overflow-hidden animate-pulse">
+                <div className="h-[36px] font-semibold uppercase mb-4 px-3 w-full bg-gray-200 rounded-lg"></div>
+                <div className="flex w-full h-full max-h-[180px] justify-between">
+                    <div className="block w-full h-full bg-gray-200 shadow-md rounded-2xl px-6 py-3 mr-1 justify-between items-center">
+                        <div className='flex w-full h-fit justify-between items-center'>
+                            <div className="w-6/12 rounded-lg h-[24px] bg-gray-300"></div>
+                            <div className="w-3/12 rounded-lg h-[18px] bg-gray-300"></div>
+                        </div>
+                        <div>
+                            <div className="flex w-full h-fit justify-center my-2 ">
+                                <div className="w-3/12 rounded-lg h-[24px] bg-gray-300"></div>
+                            </div>
+                        </div>
+                        <div className="flex w-full h-fit justify-between items-center">
+                            <div className="w-4/12 rounded-lg h-[36px] bg-gray-300"></div>
+                            <div className="w-2/12 rounded-lg h-[60px] bg-gray-300"></div>
+                            <div className="w-4/12 rounded-lg h-[36px] bg-gray-300"></div>
+                        </div>
+                    </div>
+                    <div className={`block w-fit h-full bg-gray-200 shadow-md rounded-2xl text-nowrap py-3 px-6 ml-1 justify-between items-center`}>
+                        <div className="w-[200px] mb-2 rounded-lg h-[18px] bg-gray-300"></div>
+                        <div className="w-4/12 mb-2 rounded-lg h-[14px] bg-gray-300"></div>
+                        <div className="w-4/12 mb-2 rounded-lg h-[14px] bg-gray-300"></div>
+                    </div>
+                </div>
+                <div className='block w-full h-full py-4 mt-3 bg-gray-200 px-3 rounded-2xl shadow-md'>
+
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="block w-full h-full overflow-hidden ">
-            <p className="text-3xl font-semibold uppercase mb-4 px-3 w-full">Kanin Pornsirinruk</p>
+            <p className="text-3xl font-semibold uppercase mb-4 px-3 w-full">{userData?.name.first} {userData?.name.last}</p>
             <div className="flex w-full h-full max-h-[180px] justify-between">
                 <div className="block w-full h-full bg-background-content shadow-md rounded-2xl px-6 py-3 mr-1 justify-between items-center">
                     <div className='flex w-full h-fit justify-between items-center'>
@@ -44,18 +97,23 @@ export default function Overview() {
                 </div>
                 <div className={`block w-fit h-full bg-background-content shadow-md rounded-2xl text-nowrap py-3 px-6 ml-1 justify-between items-center`}>
                     <p className="text-lg font-semibold uppercase w-full">Detail</p>
+                    <p className="text-sm font-normal uppercase w-full">Total Flight : 0</p>
                     <p className="text-sm font-normal uppercase w-full">Flight Time : 00 Hour 00 Minute</p>
                 </div>
             </div>
             <div className='block w-full h-fit py-4 mt-3 bg-background-content px-3 rounded-2xl shadow-md'>
                 <div className='flex w-full h-fit justify-between px-4 items-center'>
                     <p className='text-lg font-semibold uppercase'>Your Recent Flights</p>
-                    <Button label='Add Flight Plan' className='bg-gray-600 text-nowrap text-white hover:bg-gray-800 hover:scale-105' />
+                    <Button label='Add Flight Plan' className='bg-gray-600 text-nowrap text-white hover:bg-gray-800 hover:scale-105' onClick={handleAddFlightPlanClick} />
                 </div>
-                <div className='w-full h-full max-h-[700px] overflow-y-scroll py-2 px-3 z-0'>
-                    {flightData.map((data, index) => (
-                        <HorizonDataGrid index={index} flight={data.flight} dep_icao={data.dep_icao} arr_icao={data.arr_icao} aircraft_icao={data.aircraft_icao} airframe={data.airframe} departure_time={data.departure_time} time_enroute={data.time_enroute} date_add={data.date_add} />
-                    ))}
+                <div className='w-full h-full max-h-[650px] overflow-y-scroll my-2 px-3 z-0'>
+                    {flightPlanData.map((data, index) => {
+                        return (
+                            <div key={index}>
+                                <HorizonDataGrid flight={data?.flightPlan.general.callsign} dep_icao={data?.flightPlan.origin.icao_code} arr_icao={data.flightPlan.destination.icao_code} aircraft_icao={data?.flightPlan.alternate.icao_code} airframe={data?.flightPlan.aircraft.icaocode} departure_time={data?.flightPlan.general.times.dep_time} time_enroute={data?.flightPlan.general.times.air_time} date_add={data?.ident.date_create} />
+                            </div>
+                        )
+                    })}
                 </div>
                 <div className='flex w-full h-fit justify-center mt-2 items-center'>
                     <Button label='See All' className='bg-gray-600 text-nowrap text-white hover:bg-gray-800 hover:scale-105' />
