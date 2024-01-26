@@ -2,15 +2,13 @@ import { MdOutlineAirplanemodeActive } from 'react-icons/md'
 import { HorizonDataGrid } from '../components/DataGrid.tsx'
 import { Button } from '../components/Button.tsx';
 import { useUserDataApi } from '../api/UserData.ts';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useFlightPlanDataAPI } from '../api/FlightPlan.ts'
 
 export default function Overview() {
-    const navigate = useNavigate()
     const { userData, loading } = useUserDataApi()
-    const { flightPlanData } = useFlightPlanDataAPI()
+    const { flightPlanData, flightTimeData, fploading } = useFlightPlanDataAPI()
 
     useEffect(() => {
         // Now you can use the 'userData' and 'loading' states in your component.
@@ -37,7 +35,7 @@ export default function Overview() {
             }
             else {
                 console.log(response.data)
-                navigate('/')
+                window.location.reload();
             }
 
         } catch (error) {
@@ -45,7 +43,7 @@ export default function Overview() {
         }
     };
 
-    if (loading) {
+    if (loading || fploading) {
         return (
             <div className="block w-full h-full overflow-hidden animate-pulse">
                 <div className="h-[36px] font-semibold uppercase mb-4 px-3 w-full bg-gray-200 rounded-lg"></div>
@@ -97,8 +95,8 @@ export default function Overview() {
                 </div>
                 <div className={`block w-fit h-full bg-background-content shadow-md rounded-2xl text-nowrap py-3 px-6 ml-1 justify-between items-center`}>
                     <p className="text-lg font-semibold uppercase w-full">Detail</p>
-                    <p className="text-sm font-normal uppercase w-full">Total Flight : 0</p>
-                    <p className="text-sm font-normal uppercase w-full">Flight Time : 00 Hour 00 Minute</p>
+                    <p className="text-sm font-normal uppercase w-full">{`Total Flight : ${flightTimeData.total} Flight`}</p>
+                    <p className="text-sm font-normal uppercase w-full">{`Flight Time : ${flightTimeData.hour} Hour ${flightTimeData.minute} Minute`}</p>
                 </div>
             </div>
             <div className='block w-full h-fit py-4 mt-3 bg-background-content px-3 rounded-2xl shadow-md'>
