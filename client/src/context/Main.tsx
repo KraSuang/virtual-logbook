@@ -47,7 +47,7 @@ export default function Main() {
 
     return (
         <>
-            <div className={`flex flex-col w-full h-dvh px-6 py-6 font-Roboto bg-background`}>
+            <div className={`flex flex-col w-full h-dvh overflow-auto px-6 py-6 font-Roboto bg-background`}>
                 <Navbar Setting_Open={openSettingModal} />
                 <div className="w-full h-full mt-4">
                     <Routes>
