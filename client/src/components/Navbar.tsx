@@ -1,6 +1,6 @@
-import { Button, IconButton } from "./Button.tsx"
+import { Button, IconButton } from './Button.tsx'
 import { FaGear } from 'react-icons/fa6'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 
 interface NavbarProps {
@@ -9,11 +9,8 @@ interface NavbarProps {
 
 export default function Navbar({ Setting_Open }: NavbarProps) {
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
-    const goSignUp = () => {
-        navigate('/signup')
-    }
     return(
         <div className={`flex w-full h-[60px] bg-background-navbar rounded-xl justify-between items-center px-6`}>
             <p className={`text-2xl text-text-navbar`}>LOGBOOK</p>
