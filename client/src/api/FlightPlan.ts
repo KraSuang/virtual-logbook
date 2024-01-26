@@ -5,6 +5,7 @@ import { useUserDataApi } from './UserData.ts';
 export const useFlightPlanDataAPI = () => {
     const { userData, loading } = useUserDataApi()
     const [flightPlanData, setFlightPlanData] = useState([]);
+    const [flightTimeData, setFlightTimeData] = useState([])
     const [fploading, setFPLoading] = useState(true);
 
     useEffect(() => {
@@ -24,7 +25,9 @@ export const useFlightPlanDataAPI = () => {
                         throw new Error('Failed to fetch data');
                     }
 
-                    setFlightPlanData(response.data);
+                    setFlightPlanData(response.data.flightPlanDataArray);
+                    setFlightTimeData(response.data.flightTime)
+                    
                     console.log(response.data)
                 } catch (error) {
                     console.error(error);
@@ -37,5 +40,5 @@ export const useFlightPlanDataAPI = () => {
         }
     }, [userData]);
 
-    return { flightPlanData, fploading };
+    return { flightPlanData, fploading, flightTimeData };
 };
