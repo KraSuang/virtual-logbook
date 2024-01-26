@@ -6,7 +6,6 @@ import { FC } from 'react';
 
 interface HorizontalDataProps {
     flight: string;
-    flight_number: number;
     dep_icao: string;
     // dep_iata: string;
     arr_icao: string;
@@ -18,7 +17,7 @@ interface HorizontalDataProps {
     date_add: string;
 }
 
-export const HorizonDataGrid: FC<HorizontalDataProps> = ({ flight, flight_number, dep_icao, arr_icao, aircraft_icao, airframe, departure_time, time_enroute, date_add, ...rest }) => {
+export const HorizonDataGrid: FC<HorizontalDataProps> = ({ flight, dep_icao, arr_icao, aircraft_icao, airframe, departure_time, time_enroute, date_add, ...rest }) => {
     return (
         <div className='flex w-full shadow-md h-fit bg-background-content rounded-lg border-2 border-gray-800/20 px-3 py-2 justify-center items-center my-3'>
             <p className='w-full text-center
