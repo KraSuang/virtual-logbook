@@ -13,7 +13,7 @@ interface IconButtonProp extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Button: FC<ButtonProps> = ({ label, className, ...rest }) => {
     return (
-        <button className={`transition-all duration-200 hover:scale-110 rounded-lg px-6 py-2 ${className}`} {...rest}>
+        <button className={`transition-all duration-200 rounded-lg px-6 py-2 ${className}`} {...rest}>
             {label}
         </button>
     );
